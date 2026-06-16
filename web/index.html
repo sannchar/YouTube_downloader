@@ -233,16 +233,7 @@
 <span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
 </button>
 </div>
-<div class="mt-4 flex gap-4">
-<div class="flex items-center gap-2">
-<input checked="" class="w-4 h-4 rounded-none bg-surface-container-lowest border-outline text-primary-container focus:ring-0" type="checkbox"/>
-<span class="font-label-caps text-[10px] text-outline">AUTO_SUBTITLES</span>
-</div>
-<div class="flex items-center gap-2">
-<input class="w-4 h-4 rounded-none bg-surface-container-lowest border-outline text-primary-container focus:ring-0" type="checkbox"/>
-<span class="font-label-caps text-[10px] text-outline">APPEND_METADATA</span>
-</div>
-</div>
+
 </div>
 </div>
 <!-- Download Progress Simulation (Idle State) -->
@@ -264,7 +255,7 @@
 <footer class="bg-surface-container-lowest border-t border-outline-variant h-24 w-full flex items-center px-margin-desktop z-50">
 <div class="w-full max-w-container-max mx-auto flex items-center justify-between">
 <div class="hidden lg:flex flex-col">
-<span class="font-label-caps text-[10px] text-outline-variant">UESC_SECURE_EXTRACTION_SERVICE</span>
+<span class="font-label-caps text-[10px] text-outline-variant">YTDOWNLOAD_SERVICE</span>
 <span class="font-code-sm text-xs text-outline">V4.9.22 // BUILD_STABLE</span>
 </div>
 <button id="downloadBtn" class="group relative flex items-center justify-center px-16 h-16 bg-primary text-background font-label-caps text-lg tracking-widest font-bold border border-primary-container hover:invert active:invert transition-none">
@@ -280,11 +271,8 @@
 </div>
 <div class="h-8 w-px bg-outline-variant"></div>
 <div class="flex gap-2">
-<button class="w-10 h-10 border border-outline-variant flex items-center justify-center text-outline hover:border-primary hover:text-primary">
+<button onclick="pywebview.api.open_github()" class="w-10 h-10 border border-outline-variant flex items-center justify-center text-outline hover:border-primary hover:text-primary">
 <span class="material-symbols-outlined text-sm" data-icon="help">help</span>
-</button>
-<button class="w-10 h-10 border border-outline-variant flex items-center justify-center text-outline hover:border-primary hover:text-primary">
-<span class="material-symbols-outlined text-sm" data-icon="power_settings_new">power_settings_new</span>
 </button>
 </div>
 </div>

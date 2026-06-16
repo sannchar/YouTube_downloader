@@ -20,6 +20,10 @@ class Api:
             os.makedirs(self.downloads_dir, exist_ok=True)
         os.startfile(self.downloads_dir)
 
+    def open_github(self):
+        import webbrowser
+        webbrowser.open("https://github.com/sannchar/YouTube_downloader")
+
     def change_dir(self):
         try:
             import tkinter as tk
