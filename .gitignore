@@ -19,3 +19,13 @@ Downloads/
 *.mp3
 *.webm
 *.m4a
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Temporary and Archives
+*.zip
+design_unzipped/
+

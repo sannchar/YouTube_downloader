@@ -126,7 +126,7 @@ if __name__ == '__main__':
     api = Api()
     
     window = webview.create_window(
-        'UESC.TERMINAL.01', 
+        'YTdownload', 
         url=html_path,
         js_api=api,
         width=1000, 
