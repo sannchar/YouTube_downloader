@@ -15,6 +15,27 @@ class App(ctk.CTk):
         self.geometry("500x320")
         self.resizable(False, False)
         
+        # Windows taskbar icon fix when running directly via Python
+        try:
+            import ctypes
+            myappid = 'sannchar.youtubedownloader.1'
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+        except Exception:
+            pass
+        
+        # Set Icon
+        try:
+            import sys
+            
+            # Support PyInstaller path resolution
+            base_dir = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+            icon_path = os.path.join(base_dir, "icon.ico")
+            
+            if os.path.exists(icon_path):
+                self.iconbitmap(icon_path)
+        except Exception as e:
+            print("Could not load icon:", e)
+        
         # Configure appearance
         ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
         ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
