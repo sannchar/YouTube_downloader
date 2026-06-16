@@ -35,7 +35,7 @@
         }
 
         /* CRT Flicker */
-        .crt-flicker {
+        . {
             animation: flicker 0.15s infinite;
         }
 
@@ -160,7 +160,7 @@
         }
       </script>
 </head>
-<body class="grid-bg crt-flicker min-h-screen flex flex-col relative">
+<body class="grid-bg  min-h-screen flex flex-col relative">
 <div class="scanline"></div>
 <!-- TopAppBar Navigation Shell -->
 <header class="bg-surface border-b border-outline-variant flex justify-between items-center px-margin-desktop h-16 w-full z-50">
@@ -178,10 +178,7 @@
 <span class="material-symbols-outlined text-sm" data-icon="history">history</span>
                 HISTORY
             </button>
-<button class="flex items-center gap-2 px-6 h-full font-label-caps text-label-caps text-on-surface-variant hover:bg-primary-container hover:text-on-primary-container active:opacity-70 transition-none">
-<span class="material-symbols-outlined text-sm" data-icon="list">list</span>
-                QUEUE
-            </button>
+
 </nav>
 <div class="flex items-center gap-4">
 <div class="flex items-center gap-2 text-outline font-label-caps text-xs">
@@ -194,7 +191,7 @@
 <main class="flex-grow flex items-center justify-center p-margin-desktop overflow-hidden relative">
 <div class="w-full max-w-container-max grid grid-cols-12 gap-gutter items-start">
 <!-- Target URL Module -->
-<section class="col-span-12 md:col-span-8 space-y-gutter">
+<section class="col-span-12 space-y-gutter">
 <div class="bg-surface-container border border-outline-variant p-6 relative group">
 <div class="absolute top-0 right-0 p-2 font-label-caps text-[10px] text-outline select-none">MODULE_URL_INJECTION</div>
 <label class="block font-label-caps text-label-caps text-primary-fixed-dim mb-4">TARGET_RESOURCE_LOCATOR</label>
@@ -256,45 +253,15 @@
 <div class="bg-surface-container-lowest border border-outline-variant p-6">
 <div class="flex justify-between items-end mb-2">
 <span class="font-label-caps text-label-caps text-outline">DOWNLOAD_BUFFER_STATUS</span>
-<span class="font-code-sm text-outline-variant">WAITING_FOR_INITIATION</span>
+<span id="bufferStatusText" class="font-code-sm text-outline-variant">WAITING_FOR_INITIATION</span>
 </div>
-<div id="progressBarContainer" class="h-2 w-full bg-surface-variant flex gap-1">
-<div class="h-full w-2 bg-outline-variant"></div>
-<div class="h-full w-2 bg-outline-variant"></div>
-<div class="h-full w-2 bg-outline-variant"></div>
-<div class="h-full w-2 bg-outline-variant"></div>
-<div class="h-full flex-grow bg-outline-variant/20"></div>
+<div class="h-2 w-full bg-surface-variant flex">
+<div id="progressBarFill" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
 </div>
 </div>
 </section>
 <!-- Sidebar / Terminal Log -->
-<aside class="col-span-12 md:col-span-4 h-full flex flex-col gap-gutter">
-<div class="bg-surface-container-high border border-outline-variant flex-grow p-6 flex flex-col min-h-[400px]">
-<div class="flex justify-between items-center border-b border-outline-variant pb-4 mb-4">
-<span class="font-label-caps text-label-caps text-primary">TERMINAL_LOG.EXE</span>
-<span class="material-symbols-outlined text-sm text-outline" data-icon="terminal">terminal</span>
-</div>
-<div id="terminalLog" class="flex-grow font-code-sm text-[11px] leading-relaxed text-outline-variant overflow-y-auto custom-scrollbar pr-2">
-<p class="text-primary-fixed-dim">[09:24:51] SYSTEM_INITIALIZED</p>
-<p>[09:24:52] CONNECTING_TO_GATEWAY_NODE... OK</p>
-<p>[09:24:53] FETCHING_LOCAL_CONFIG... OK</p>
-<p>[09:24:55] CACHE_CLEARED</p>
-<p>[09:25:01] WAITING_FOR_USER_INPUT_STREAM</p>
-<p class="animate-pulse">_</p>
-</div>
-</div>
-<div class="bg-surface-container border border-outline-variant p-4">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 border border-outline-variant flex items-center justify-center">
-<span class="material-symbols-outlined text-primary" data-icon="dns">dns</span>
-</div>
-<div class="flex-grow">
-<p class="font-label-caps text-label-caps text-outline">PEER_CONNECTION</p>
-<p class="font-code-sm text-primary">ENCRYPTED_SIGNAL_STRENGTH_94%</p>
-</div>
-</div>
-</div>
-</aside>
+
 </div>
 </main>
 <!-- Bottom Footer with Primary Action -->
@@ -331,15 +298,9 @@
 <script>
         // Simple micro-interaction for the input field to simulate system focus
         const input = document.querySelector('input[type="text"]');
-        const logs = document.querySelector('.overflow-y-auto');
+        
 
-        input.addEventListener('focus', () => {
-            const entry = document.createElement('p');
-            entry.className = 'text-primary';
-            entry.innerText = `[${new Date().toLocaleTimeString()}] USER_INPUT_MODE_ACTIVE`;
-            logs.appendChild(entry);
-            logs.scrollTop = logs.scrollHeight;
-        });
+        
 
         
         let currentFormat = 'video';
@@ -354,27 +315,22 @@
             }
         }
 
-        window.addLogMessage = function(msg) {
-            const entry = document.createElement('p');
-            if (msg.includes("ERROR")) entry.className = 'text-error';
-            else entry.className = 'text-primary';
-            entry.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
-            const logs = document.getElementById('terminalLog');
-            logs.insertBefore(entry, logs.lastElementChild);
-            logs.scrollTop = logs.scrollHeight;
+                window.addLogMessage = function(msg) {
+            const statusText = document.getElementById('bufferStatusText');
+            if (statusText) {
+                statusText.innerText = msg;
+                if (msg.includes("ERROR")) {
+                    statusText.className = "font-code-sm text-error";
+                } else {
+                    statusText.className = "font-code-sm text-primary";
+                }
+            }
         };
 
-        window.updateProgress = function(percent) {
-            const container = document.getElementById('progressBarContainer');
-            container.innerHTML = '';
-            const totalBlocks = 20;
-            const activeBlocks = Math.floor((percent / 100) * totalBlocks);
-            
-            for (let i = 0; i < activeBlocks; i++) {
-                container.innerHTML += `<div class="h-full w-2 bg-primary"></div>`;
-            }
-            if (activeBlocks < totalBlocks) {
-                container.innerHTML += `<div class="h-full flex-grow bg-outline-variant/20"></div>`;
+                window.updateProgress = function(percent) {
+            const fill = document.getElementById('progressBarFill');
+            if(fill) {
+                fill.style.width = percent + '%';
             }
         };
 
@@ -413,13 +369,6 @@
         });
 
         // Background atmosphere: random glitches
-        setInterval(() => {
-            if (Math.random() > 0.95) {
-                document.body.style.filter = 'contrast(1.1) brightness(1.2)';
-                setTimeout(() => {
-                    document.body.style.filter = 'none';
-                }, 50);
-            }
-        }, 3000);
+        
     </script>
 </body></html>
