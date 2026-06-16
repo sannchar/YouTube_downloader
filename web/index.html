@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UESC.TERMINAL.01 - Desktop</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&amp;family=JetBrains+Mono:wght@300;400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #121315;
+            color: #e3e2e5;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Scanline Effect */
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 225, 171, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+
+        /* CRT Flicker */
+        .crt-flicker {
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.98; }
+            50% { opacity: 1; }
+            100% { opacity: 0.99; }
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            background-image: 
+                linear-gradient(to right, rgba(58, 74, 67, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(58, 74, 67, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Technical Border Glow */
+        .glow-border {
+            box-shadow: 0 0 10px rgba(0, 225, 171, 0.1);
+        }
+
+        .active-tab-indicator {
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1b1c1e;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #00e1ab;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline-variant": "#3a4a43",
+                      "on-primary-fixed-variant": "#00513c",
+                      "primary-fixed": "#36ffc4",
+                      "surface-variant": "#343537",
+                      "primary-container": "#00ffc2",
+                      "on-error-container": "#ffdad6",
+                      "error": "#ffb4ab",
+                      "surface-container-low": "#1b1c1e",
+                      "on-tertiary-fixed": "#410003",
+                      "tertiary-fixed": "#ffdad6",
+                      "surface-container": "#1f2022",
+                      "on-tertiary-fixed-variant": "#930010",
+                      "background": "#121315",
+                      "secondary-fixed": "#ffdea8",
+                      "surface-bright": "#38393b",
+                      "on-primary": "#003828",
+                      "primary": "#fbfffa",
+                      "surface-container-high": "#292a2c",
+                      "on-surface": "#e3e2e5",
+                      "secondary-container": "#feb700",
+                      "on-secondary": "#412d00",
+                      "error-container": "#93000a",
+                      "secondary": "#ffdb9d",
+                      "surface": "#121315",
+                      "inverse-primary": "#006c50",
+                      "on-secondary-fixed": "#271900",
+                      "on-tertiary-container": "#c80d1e",
+                      "on-error": "#690005",
+                      "surface-container-highest": "#343537",
+                      "on-primary-fixed": "#002116",
+                      "surface-tint": "#00e1ab",
+                      "on-primary-container": "#007255",
+                      "on-background": "#e3e2e5",
+                      "on-secondary-fixed-variant": "#5e4200",
+                      "secondary-fixed-dim": "#ffba20",
+                      "outline": "#83958c",
+                      "tertiary-fixed-dim": "#ffb3ad",
+                      "inverse-on-surface": "#303033",
+                      "inverse-surface": "#e3e2e5",
+                      "tertiary": "#fffeff",
+                      "surface-container-lowest": "#0d0e10",
+                      "on-tertiary": "#680008",
+                      "surface-dim": "#121315",
+                      "primary-fixed-dim": "#00e1ab",
+                      "on-surface-variant": "#b9cbc1",
+                      "on-secondary-container": "#6b4b00",
+                      "tertiary-container": "#ffd9d5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0px",
+                      "lg": "0px",
+                      "xl": "0px",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "unit": "4px",
+                      "margin-desktop": "40px",
+                      "gutter": "16px",
+                      "container-max": "1200px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Space Grotesk"],
+                      "body-base": ["JetBrains Mono"],
+                      "code-sm": ["JetBrains Mono"],
+                      "label-caps": ["JetBrains Mono"],
+                      "headline-md-mobile": ["Space Grotesk"],
+                      "headline-md": ["Space Grotesk"]
+              },
+              "fontSize": {
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                      "body-base": ["14px", {"lineHeight": "1.6", "letterSpacing": "0.02em", "fontWeight": "400"}],
+                      "code-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                      "label-caps": ["11px", {"lineHeight": "1.0", "letterSpacing": "0.2em", "fontWeight": "700"}],
+                      "headline-md-mobile": ["20px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="grid-bg crt-flicker min-h-screen flex flex-col relative">
+<div class="scanline"></div>
+<!-- TopAppBar Navigation Shell -->
+<header class="bg-surface border-b border-outline-variant flex justify-between items-center px-margin-desktop h-16 w-full z-50">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="terminal">terminal</span>
+<h1 class="font-headline-md text-headline-md text-primary tracking-widest uppercase">UESC.TERMINAL.01</h1>
+</div>
+<!-- Desktop Navigation Integration -->
+<nav class="hidden md:flex items-center gap-2 h-full">
+<button class="flex items-center gap-2 px-6 h-full font-label-caps text-label-caps bg-primary-container text-on-primary-container active:opacity-70 transition-none">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                EXTRACT
+            </button>
+<button class="flex items-center gap-2 px-6 h-full font-label-caps text-label-caps text-on-surface-variant hover:bg-primary-container hover:text-on-primary-container active:opacity-70 transition-none">
+<span class="material-symbols-outlined text-sm" data-icon="history">history</span>
+                HISTORY
+            </button>
+<button class="flex items-center gap-2 px-6 h-full font-label-caps text-label-caps text-on-surface-variant hover:bg-primary-container hover:text-on-primary-container active:opacity-70 transition-none">
+<span class="material-symbols-outlined text-sm" data-icon="list">list</span>
+                QUEUE
+            </button>
+</nav>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-outline font-label-caps text-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                SYSTEM_STABLE
+            </div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex items-center justify-center p-margin-desktop overflow-hidden relative">
+<div class="w-full max-w-container-max grid grid-cols-12 gap-gutter items-start">
+<!-- Target URL Module -->
+<section class="col-span-12 md:col-span-8 space-y-gutter">
+<div class="bg-surface-container border border-outline-variant p-6 relative group">
+<div class="absolute top-0 right-0 p-2 font-label-caps text-[10px] text-outline select-none">MODULE_URL_INJECTION</div>
+<label class="block font-label-caps text-label-caps text-primary-fixed-dim mb-4">TARGET_RESOURCE_LOCATOR</label>
+<div class="relative flex items-center">
+<input id="urlInput" class="w-full bg-surface-container-lowest border border-outline text-primary font-body-base px-4 py-4 focus:ring-1 focus:ring-primary-container focus:border-primary-container outline-none placeholder:text-outline-variant transition-all" placeholder="HTTPS://DATA_STREAM_NODE_01/RESOURCES/..." type="text"/>
+<span class="absolute right-4 text-primary animate-pulse font-bold">_</span>
+</div>
+</div>
+<!-- Technical Configuration Grid -->
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Encoding Selection -->
+<div class="bg-surface-container border border-outline-variant p-6">
+<label class="block font-label-caps text-label-caps text-primary-fixed-dim mb-6">ENCODING_PARAMETERS</label>
+<div class=""><div class="grid grid-cols-2 gap-2">
+<div id="formatVideo" onclick="setFormat('video')" class="cursor-pointer border border-primary-container bg-primary-container/10 p-4 flex flex-col gap-2 relative overflow-hidden">
+<div class="scanline opacity-20"></div>
+<div class="flex justify-between items-center">
+<span class="font-display-lg text-[11px] tracking-[0.2em] text-primary-fixed-dim uppercase">VIDEO_DATA</span>
+<span class="material-symbols-outlined text-primary-fixed-dim text-lg">movie</span>
+</div>
+<div class="font-body-base text-xs text-outline-variant mt-2">MKV / HEVC</div>
+</div>
+<div id="formatAudio" onclick="setFormat('audio')" class="cursor-pointer border border-outline-variant bg-surface-container-lowest p-4 flex flex-col gap-2 relative overflow-hidden">
+<div class="flex justify-between items-center">
+<span class="font-display-lg text-[11px] tracking-[0.2em] text-outline uppercase">AUDIO_SIGNAL</span>
+<span class="material-symbols-outlined text-outline text-lg">graphic_eq</span>
+</div>
+<div class="font-body-base text-xs text-outline-variant mt-2">FLAC / 24-BIT</div>
+</div>
+</div></div>
+</div>
+<!-- Storage Path -->
+<div class="bg-surface-container border border-outline-variant p-6">
+<label class="block font-label-caps text-label-caps text-primary-fixed-dim mb-6">STORAGE_PATH_DEFINITION</label>
+<div class="flex gap-2">
+<div id="dirDisplay" class="flex-grow bg-surface-container-lowest border border-outline-variant p-3 font-code-sm text-outline flex items-center overflow-hidden whitespace-nowrap">
+                                /ROOT/UESC/DOWNLOADS/ARCHIVE_01/
+                            </div>
+<button id="openDirBtn" class="bg-surface-container-highest px-4 border border-outline-variant text-primary hover:bg-primary-container hover:text-on-primary-container" title="Open Directory">
+<span class="material-symbols-outlined" data-icon="folder_open">open_in_new</span>
+</button>
+<button id="changeDirBtn" class="bg-surface-container-highest px-4 border-t border-b border-r border-outline-variant text-primary hover:bg-primary-container hover:text-on-primary-container" title="Change Directory">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+</button>
+</div>
+<div class="mt-4 flex gap-4">
+<div class="flex items-center gap-2">
+<input checked="" class="w-4 h-4 rounded-none bg-surface-container-lowest border-outline text-primary-container focus:ring-0" type="checkbox"/>
+<span class="font-label-caps text-[10px] text-outline">AUTO_SUBTITLES</span>
+</div>
+<div class="flex items-center gap-2">
+<input class="w-4 h-4 rounded-none bg-surface-container-lowest border-outline text-primary-container focus:ring-0" type="checkbox"/>
+<span class="font-label-caps text-[10px] text-outline">APPEND_METADATA</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Download Progress Simulation (Idle State) -->
+<div class="bg-surface-container-lowest border border-outline-variant p-6">
+<div class="flex justify-between items-end mb-2">
+<span class="font-label-caps text-label-caps text-outline">DOWNLOAD_BUFFER_STATUS</span>
+<span class="font-code-sm text-outline-variant">WAITING_FOR_INITIATION</span>
+</div>
+<div id="progressBarContainer" class="h-2 w-full bg-surface-variant flex gap-1">
+<div class="h-full w-2 bg-outline-variant"></div>
+<div class="h-full w-2 bg-outline-variant"></div>
+<div class="h-full w-2 bg-outline-variant"></div>
+<div class="h-full w-2 bg-outline-variant"></div>
+<div class="h-full flex-grow bg-outline-variant/20"></div>
+</div>
+</div>
+</section>
+<!-- Sidebar / Terminal Log -->
+<aside class="col-span-12 md:col-span-4 h-full flex flex-col gap-gutter">
+<div class="bg-surface-container-high border border-outline-variant flex-grow p-6 flex flex-col min-h-[400px]">
+<div class="flex justify-between items-center border-b border-outline-variant pb-4 mb-4">
+<span class="font-label-caps text-label-caps text-primary">TERMINAL_LOG.EXE</span>
+<span class="material-symbols-outlined text-sm text-outline" data-icon="terminal">terminal</span>
+</div>
+<div id="terminalLog" class="flex-grow font-code-sm text-[11px] leading-relaxed text-outline-variant overflow-y-auto custom-scrollbar pr-2">
+<p class="text-primary-fixed-dim">[09:24:51] SYSTEM_INITIALIZED</p>
+<p>[09:24:52] CONNECTING_TO_GATEWAY_NODE... OK</p>
+<p>[09:24:53] FETCHING_LOCAL_CONFIG... OK</p>
+<p>[09:24:55] CACHE_CLEARED</p>
+<p>[09:25:01] WAITING_FOR_USER_INPUT_STREAM</p>
+<p class="animate-pulse">_</p>
+</div>
+</div>
+<div class="bg-surface-container border border-outline-variant p-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="dns">dns</span>
+</div>
+<div class="flex-grow">
+<p class="font-label-caps text-label-caps text-outline">PEER_CONNECTION</p>
+<p class="font-code-sm text-primary">ENCRYPTED_SIGNAL_STRENGTH_94%</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Bottom Footer with Primary Action -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant h-24 w-full flex items-center px-margin-desktop z-50">
+<div class="w-full max-w-container-max mx-auto flex items-center justify-between">
+<div class="hidden lg:flex flex-col">
+<span class="font-label-caps text-[10px] text-outline-variant">UESC_SECURE_EXTRACTION_SERVICE</span>
+<span class="font-code-sm text-xs text-outline">V4.9.22 // BUILD_STABLE</span>
+</div>
+<button id="downloadBtn" class="group relative flex items-center justify-center px-16 h-16 bg-primary text-background font-label-caps text-lg tracking-widest font-bold border border-primary-container hover:invert active:invert transition-none">
+<span class="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-primary group-hover:border-background"></span>
+<span class="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-primary group-hover:border-background"></span>
+                INITIATE_DOWNLOAD
+                <span class="material-symbols-outlined ml-4" data-icon="bolt" data-weight="fill">bolt</span>
+</button>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="font-label-caps text-[10px] text-outline-variant">DISK_CAPACITY</p>
+<p class="font-code-sm text-primary">1.2 TB FREE</p>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<div class="flex gap-2">
+<button class="w-10 h-10 border border-outline-variant flex items-center justify-center text-outline hover:border-primary hover:text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+</button>
+<button class="w-10 h-10 border border-outline-variant flex items-center justify-center text-outline hover:border-primary hover:text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="power_settings_new">power_settings_new</span>
+</button>
+</div>
+</div>
+</div>
+</footer>
+<!-- Interactive Layer -->
+<script>
+        // Simple micro-interaction for the input field to simulate system focus
+        const input = document.querySelector('input[type="text"]');
+        const logs = document.querySelector('.overflow-y-auto');
+
+        input.addEventListener('focus', () => {
+            const entry = document.createElement('p');
+            entry.className = 'text-primary';
+            entry.innerText = `[${new Date().toLocaleTimeString()}] USER_INPUT_MODE_ACTIVE`;
+            logs.appendChild(entry);
+            logs.scrollTop = logs.scrollHeight;
+        });
+
+        
+        let currentFormat = 'video';
+        function setFormat(format) {
+            currentFormat = format;
+            if (format === 'video') {
+                document.getElementById('formatVideo').className = "cursor-pointer border border-primary-container bg-primary-container/10 p-4 flex flex-col gap-2 relative overflow-hidden";
+                document.getElementById('formatAudio').className = "cursor-pointer border border-outline-variant bg-surface-container-lowest p-4 flex flex-col gap-2 relative overflow-hidden";
+            } else {
+                document.getElementById('formatAudio').className = "cursor-pointer border border-primary-container bg-primary-container/10 p-4 flex flex-col gap-2 relative overflow-hidden";
+                document.getElementById('formatVideo').className = "cursor-pointer border border-outline-variant bg-surface-container-lowest p-4 flex flex-col gap-2 relative overflow-hidden";
+            }
+        }
+
+        window.addLogMessage = function(msg) {
+            const entry = document.createElement('p');
+            if (msg.includes("ERROR")) entry.className = 'text-error';
+            else entry.className = 'text-primary';
+            entry.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            const logs = document.getElementById('terminalLog');
+            logs.insertBefore(entry, logs.lastElementChild);
+            logs.scrollTop = logs.scrollHeight;
+        };
+
+        window.updateProgress = function(percent) {
+            const container = document.getElementById('progressBarContainer');
+            container.innerHTML = '';
+            const totalBlocks = 20;
+            const activeBlocks = Math.floor((percent / 100) * totalBlocks);
+            
+            for (let i = 0; i < activeBlocks; i++) {
+                container.innerHTML += `<div class="h-full w-2 bg-primary"></div>`;
+            }
+            if (activeBlocks < totalBlocks) {
+                container.innerHTML += `<div class="h-full flex-grow bg-outline-variant/20"></div>`;
+            }
+        };
+
+        window.downloadComplete = function() {
+            document.getElementById('downloadBtn').innerHTML = `
+                <span class="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-primary group-hover:border-background"></span>
+                <span class="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-primary group-hover:border-background"></span>
+                INITIATE_DOWNLOAD
+                <span class="material-symbols-outlined ml-4" data-icon="bolt" data-weight="fill">bolt</span>
+            `;
+            document.getElementById('downloadBtn').disabled = false;
+        };
+
+        window.addEventListener('pywebviewready', function() {
+            pywebview.api.get_downloads_dir().then(dir => {
+                document.getElementById('dirDisplay').innerText = dir;
+            });
+            
+            document.getElementById('changeDirBtn').addEventListener('click', () => {
+                pywebview.api.change_dir().then(dir => {
+                    document.getElementById('dirDisplay').innerText = dir;
+                });
+            });
+
+            document.getElementById('openDirBtn').addEventListener('click', () => {
+                pywebview.api.open_dir();
+            });
+            
+            document.getElementById('downloadBtn').addEventListener('click', () => {
+                const url = document.getElementById('urlInput').value;
+                if (!url) return;
+                document.getElementById('downloadBtn').innerText = "PROCESSING...";
+                document.getElementById('downloadBtn').disabled = true;
+                pywebview.api.start_download(url, currentFormat);
+            });
+        });
+
+        // Background atmosphere: random glitches
+        setInterval(() => {
+            if (Math.random() > 0.95) {
+                document.body.style.filter = 'contrast(1.1) brightness(1.2)';
+                setTimeout(() => {
+                    document.body.style.filter = 'none';
+                }, 50);
+            }
+        }, 3000);
+    </script>
+</body></html>
