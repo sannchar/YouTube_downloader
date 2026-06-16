@@ -12,7 +12,7 @@ class App(ctk.CTk):
         
         # Configure window
         self.title("YouTube Downloader")
-        self.geometry("500x320")
+        self.geometry("500x400")
         self.resizable(False, False)
         
         # Windows taskbar icon fix when running directly via Python
@@ -68,17 +68,48 @@ class App(ctk.CTk):
         self.radio_audio = ctk.CTkRadioButton(self.radio_frame, text="Audio (MP3)", variable=self.format_var, value="audio")
         self.radio_audio.grid(row=0, column=1, padx=20)
         
+        # Directory Selection
+        self.downloads_dir = os.path.join(os.getcwd(), 'Downloads')
+        
+        self.dir_frame = ctk.CTkFrame(self.frame, fg_color="transparent")
+        self.dir_frame.grid(row=3, column=0, padx=20, pady=5, sticky="ew")
+        self.dir_frame.grid_columnconfigure(0, weight=1)
+        
+        # We display the short path to not overflow the UI
+        display_dir = self.downloads_dir if len(self.downloads_dir) < 35 else "..." + self.downloads_dir[-32:]
+        self.dir_label = ctk.CTkLabel(self.dir_frame, text=f"Folder: {display_dir}", text_color="gray")
+        self.dir_label.grid(row=0, column=0, padx=(0, 10), sticky="w")
+        
+        self.btn_open_dir = ctk.CTkButton(self.dir_frame, text="Open", width=60, command=self.open_dir)
+        self.btn_open_dir.grid(row=0, column=1, padx=5)
+        
+        self.btn_change_dir = ctk.CTkButton(self.dir_frame, text="Change", width=60, command=self.change_dir)
+        self.btn_change_dir.grid(row=0, column=2, padx=0)
+        
         # Download Button
         self.download_button = ctk.CTkButton(self.frame, text="Download", command=self.start_download, font=ctk.CTkFont(weight="bold"))
-        self.download_button.grid(row=3, column=0, padx=20, pady=15)
+        self.download_button.grid(row=4, column=0, padx=20, pady=15)
         
         # Status Label
         self.status_label = ctk.CTkLabel(self.frame, text="Ready", text_color="gray")
-        self.status_label.grid(row=4, column=0, padx=20, pady=(0, 20))
+        self.status_label.grid(row=5, column=0, padx=20, pady=(0, 20))
         
     def check_ffmpeg(self):
         """Check if FFmpeg is installed and accessible in the system PATH."""
         return shutil.which('ffmpeg') is not None
+        
+    def open_dir(self):
+        if not os.path.exists(self.downloads_dir):
+            os.makedirs(self.downloads_dir, exist_ok=True)
+        os.startfile(self.downloads_dir)
+        
+    def change_dir(self):
+        from tkinter import filedialog
+        new_dir = filedialog.askdirectory(initialdir=self.downloads_dir, title="Select Download Folder")
+        if new_dir:
+            self.downloads_dir = new_dir
+            display_dir = self.downloads_dir if len(self.downloads_dir) < 35 else "..." + self.downloads_dir[-32:]
+            self.dir_label.configure(text=f"Folder: {display_dir}")
         
     def start_download(self):
         url = self.url_entry.get().strip()
@@ -103,7 +134,7 @@ class App(ctk.CTk):
             # Lazy import to ensure the app starts up very fast
             import yt_dlp
             
-            downloads_dir = os.path.join(os.getcwd(), 'Downloads')
+            downloads_dir = self.downloads_dir
             os.makedirs(downloads_dir, exist_ok=True)
             
             # Helper function for progress hook
